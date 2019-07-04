@@ -1,0 +1,25 @@
+<launch>
+    <group ns="T265">
+        <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+            <arg name="fisheye_width"    value="848"/>
+            <arg name="fisheye_height"   value="800"/>
+            <arg name="fisheye_fps"      value="30"/>
+            <arg name="enable_fisheye1"  value="false"/>
+            <arg name="enable_fisheye2"  value="false"/>
+            
+            <arg name="gyro_fps"         value="200"/>
+            <arg name="accel_fps"        value="62"/>
+            <arg name="enable_gyro"      value="false"/>
+            <arg name="enable_accel"     value="false"/>
+            
+            <arg name="enable_sync"      value="true"/>
+            <arg name="linear_accel_cov" value="0.01"/>
+            <arg name="initial_reset"    value="false"/>
+            <arg name="unite_imu_method" value=""/>
+            
+            <arg name="tf_prefix"        value="T265"/>
+            <arg name="serial_no"        value=""/>
+            <arg name="json_file_path"   value=""/>
+        </include>
+    </group>
+</launch>

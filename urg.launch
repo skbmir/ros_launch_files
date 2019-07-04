@@ -1,0 +1,17 @@
+<launch>
+    <arg name="ip_address" default=""/>
+    <arg name="serial_port" default=""/>
+    <arg name="angle_min" default="-1.5707963"/>
+    <arg name="angle_max" default="1.5707963"/>
+    <node pkg="urg_node" type="urg_node" name="urg_node">
+        <param name="ip_address" value="$(arg ip_address)"/>
+        <param name="serial_port" value="$(arg serial_port)"/>
+        <param name="serial_baud" value="115200"/>
+        <param name="frame_id" value="laser"/>
+        <param name="calibrate_time" value="true"/>
+        <param name="publish_intensity" value="false"/>
+        <param name="publish_multiecho" value="false"/>
+        <param name="angle_min" value="$(arg angle_min)"/>
+        <param name="angle_max" value="$(arg angle_max)"/>
+    </node>
+</launch>

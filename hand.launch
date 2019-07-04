@@ -1,0 +1,6 @@
+<launch>
+    <arg name="arduino_port" default="/dev/ttyUSB0"/>
+    <node pkg="rosserial_python" type="serial_node.py" name="rosserial_server" args="$(arg arduino_port)"/>
+    <node pkg="joy" type="joy_node" name="joy_node"/>
+    <node pkg="joy_control" type="joy_control_node.py" name="joy_control_node"/>
+</launch>
