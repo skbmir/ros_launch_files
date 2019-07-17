@@ -1,0 +1,17 @@
+<launch>
+    <arg name="node_name" default="ublox"/>
+    <arg name="param_file_name" default="ublox_car.yaml" doc="name of param file, e.g. rover"/>
+    <arg name="output" default="screen"/>
+    <arg name="clear_params" default="true"/>
+    <arg name="tf_params" default="0 0 0 0 0 0"/>
+    <node pkg="tf" type="static_transform_publisher" 
+          name="base2foot_tf_broadcaster"
+          args="$(arg base2foot_tf_params) base_link gps_link"/>
+    <node pkg="ublox_gps" type="ublox_gps" name="$(arg node_name)" output="screen"
+          clear_params="$(arg clear_params)" respawn="true">
+          <rosparam command="load" file="$(arg param_file_name)"/>
+    </node>
+    <node pkg="gps_common" type="utm_odometry_node" name="utm_odometry_node" respawn="true" output="screen">
+        <remap from="fix" to="$(arg node_name)/fix"/>
+    </node>
+</launch>

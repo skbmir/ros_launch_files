@@ -1,13 +1,17 @@
 <launch>
     <arg name="ip_address" default=""/>
-    <arg name="serial_port" default=""/>
-    <arg name="angle_min" default="-1.5707963"/>
-    <arg name="angle_max" default="1.5707963"/>
+    <arg name="serial_port" default="/dev/ttyACM0"/>
+    <arg name="angle_min" default="-1.5708"/>
+    <arg name="angle_max" default="1.5708"/>
+    <arg name="tf_params" default="0 0 0 0 0 0"/>
+    <node pkg="tf" type="static_transform_publisher" 
+              name="zed_tf_broadcaster"
+              args="$(arg tf_params) base_link laser_link"/>
     <node pkg="urg_node" type="urg_node" name="urg_node">
         <param name="ip_address" value="$(arg ip_address)"/>
         <param name="serial_port" value="$(arg serial_port)"/>
         <param name="serial_baud" value="115200"/>
-        <param name="frame_id" value="laser"/>
+        <param name="frame_id" value="laser_link"/>
         <param name="calibrate_time" value="true"/>
         <param name="publish_intensity" value="false"/>
         <param name="publish_multiecho" value="false"/>

@@ -1,0 +1,49 @@
+# Settings for C94-M8P on car
+
+debug: 1
+
+save:
+  mask: 3103
+  
+  device: 4
+  
+device: /dev/ttyACM0
+frame_id: gps
+rate: 8
+nav_rate: 8
+
+dynamic_model: automotive # Automotive mode
+                          # Max Alt: 6000 m
+                          # Max Vel: 84 m/s
+                          # Max Vertical Vel: 15 m/s
+                          # Max Position Deviation: medium
+                          
+fix_mode: 2d
+enable_ppp: false # Not supported
+dr_limit: 0
+
+uart1:
+  baudrate: 19200 # C94-M8P specific
+  in: 32 # RTCM 3
+  out: 0 # No UART out for rover
+
+gnss:
+  gps: true
+  glonass: true
+  beidou: false
+  qzss: false
+
+dat:
+  set: false
+
+tmode3: 0
+
+dgnss_mode: 3 # fixed mode
+
+inf:
+  all: true
+  
+publish:
+  all: true
+  aid:
+    all: false

@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap">
+        <param name="" value=""/>
+    </node>
+</launch>

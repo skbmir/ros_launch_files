@@ -1,0 +1,27 @@
+<launch>
+    <arg name="zed_node_name" default="zed_node"/>
+    <arg name="camera_model"  default="zed"/>
+    <arg name="manager" default="zed_manager"/>
+    <arg name="tf_params" default="0 0 0 0 0 0"/>
+    <group ns="zed">
+        <node pkg="tf" type="static_transform_publisher" 
+              name="zed_tf_broadcaster"
+              args="$(arg tf_params) base_link zed_link"/>
+        <node pkg="nodelet" type="nodelet" name="zed_manager" args="manager" output="screen"/>
+        <node pkg="nodelet" type="nodelet" name="zed" args="load zed_wrapper/ZEDWrapperNodelet zed_manager" output="screen">
+            <rosparam file="$(find zed_wrapper)/params/common.yaml" command="load"/>
+            <rosparam file="$(find zed_wrapper)/params/zed.yaml" command="load"/>
+            <param name="svo_file" value=""/>
+            <param name="stream"   value=""/>
+        </node>
+        <node pkg="nodelet" type="nodelet" name="zed_downsample" args="load pcl/VoxelGrid $(arg manager)" output="screen">
+            <param name="leaf_size" value="0.1"/>
+            <param name="filter_field_name" value="z"/>
+            <param name="filter_limit_min" value="0.01"/>
+            <param name="filter_limit_max" value="10.0"/>
+            <param name="filter_limit_negative" value="False"/>
+            <remap from="input" to=""/>
+            <remap from="output" to="/downsampled/points"/>
+        </node>
+    </group>
+</launch>

@@ -1,0 +1,4 @@
+<launch>
+    <machine name="orangepipc" address="192.168.0.148" env-loader="/home/stdbreaks/start.sh" default="false" user="stdbreaks" password="std#32"/>
+    <node machine="orangepipc" pkg="bno055_linux_driver" type="bno055_node" name="bno055_node"/>
+</launch>
