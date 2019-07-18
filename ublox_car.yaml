@@ -1,6 +1,6 @@
 # Settings for C94-M8P on car
 
-debug: 1
+debug: 0
 
 save:
   mask: 3103
@@ -8,9 +8,11 @@ save:
   device: 4
   
 device: /dev/ttyACM0
-frame_id: gps
-rate: 8
-nav_rate: 8
+frame_id: gps_link
+rate: 10
+nav_rate: 1
+
+tmode3: 0
 
 dynamic_model: automotive # Automotive mode
                           # Max Alt: 6000 m
@@ -35,8 +37,6 @@ gnss:
 
 dat:
   set: false
-
-tmode3: 0
 
 dgnss_mode: 3 # fixed mode
 

@@ -1,16 +1,12 @@
 <launch>
     <arg name="camera" default="D415"/>
     <arg name="serial_no" default=""/>
-    <arg name="tf_params" default="0 0 0 0 0 0"/>
     <group ns="$(arg camera)">
-        <node pkg="tf" type="static_transform_publisher" 
-              name="$(arg camera)_tf_broadcaster"
-              args="$(arg tf_params) base_link $(arg camera)_link"/>
         <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
             <arg name="color_width"               value="1280"/>
             <arg name="color_height"              value="720"/>
             <arg name="color_fps"                 value="30"/>
-            <arg name="enable_color"              value="false"/>
+            <arg name="enable_color"              value="true"/>
             
             <arg name="depth_width"               value="848"/>
             <arg name="depth_height"              value="480"/>
