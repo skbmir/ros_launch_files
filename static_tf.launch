@@ -1,6 +1,5 @@
 <launch>
-    <arg name="base2foot_tf_params" default="0 0 0 0 0 0"/>
     <node pkg="tf" type="static_transform_publisher" 
-              name="base2foot_tf_broadcaster"
-              args="$(arg base2foot_tf_params) base_footprint base_link"/>
+              name="base_link_tf_broadcaster"
+              args=" base_footprint base_link"/>
 </launch>

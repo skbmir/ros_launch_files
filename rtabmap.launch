@@ -1,0 +1,70 @@
+<launch>
+    <group ns="T265">
+        <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+            <arg name="serial_no" value="909212110337"/>
+            <arg name="tf_prefix" value="T265"/>
+            <arg name="initial_reset" value="true"/>
+            
+            <arg name="enable_fisheye1" value="false"/>
+            <arg name="enable_fisheye2" value="false"/>
+            
+            <arg name="fisheye_fps" value="30"/>
+            <arg name="fisheye_width" value="848"/>
+            <arg name="fisheye_height" value="800"/>
+            
+            <arg name="enable_gyro" value="true"/>
+            <arg name="gyro_fps" value="200"/>
+            <arg name="enable_accel" value="true"/>
+            <arg name="accel_fps" value="62"/>
+            
+            <arg name="enable_depth" value="false"/>
+            <arg name="enable_infra1" value="false"/>
+            <arg name="enable_infra2" value="false"/>
+            <arg name="enable_color" value="false"/>
+        </include>
+    </group>
+    <group ns="D415">
+        <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+            <arg name="serial_no" value="840412061544"/>
+            <arg name="tf_prefix" value="D415"/>
+            <arg name="initial_reset" value="true"/>
+            <arg name="enable_sync"  value="true"/>
+            <arg name="align_depth"  value="true"/>
+            <arg name="clip_distance" value="-2"/>
+            <arg name="filters" value="pointcloud"/>
+            
+            <arg name="enable_depth" value="true"/>
+            <arg name="enable_infra1" value="false"/>
+            <arg name="enable_infra2" value="false"/>
+            <arg name="enable_color" value="true"/>
+            
+            <arg name="depth_width" value="848"/>
+            <arg name="depth_height" value="480"/>
+            <arg name="depth_fps"    value="15"/>
+            
+            <arg name="color_width" value="848"/>
+            <arg name="color_height" value="480"/>
+            <arg name="color_fps"    value="15"/>
+            
+            <arg name="enable_fisheye1" value="false"/>
+            <arg name="enable_fisheye2" value="false"/>
+            <arg name="enable_gyro" value="false"/>
+            <arg name="enable_accel" value="false"/>
+        </include>
+    </group>
+    <node pkg="tf" type="static_transform_publisher" name="t265_to_d400" args="0 0 0.02 0 0 0 /T265_link /D415_link 10"/>
+    <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+        <arg name="rtabmap_args"  value="--delete_db_on_start"/>
+        <arg name="depth_topic"   value="/D415/aligned_depth_to_color/image_raw"/>
+        <arg name="frame_id"      value="D415_link"/>
+        <arg name="map_frame_id"  value="T265_odom_frame"/>
+        <arg name="publish_tf_map" value="false"/>
+        <arg name="visual_odometry" value="false"/>
+        <arg name="odom_topic"      value="/T265/odom/sample"/>
+        <arg name="rgb_topic"       value="/D415/color/image_raw"/>
+        <arg name="camera_info_topic" value="/D415/color/camera_info"/>
+        <arg name="queue_size"        value="200"/>
+        <arg name="rviz"              value="true"/>
+        <arg name="rtabmapviz"        value="false"/>
+    </include>
+</launch>

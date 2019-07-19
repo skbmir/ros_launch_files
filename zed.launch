@@ -22,7 +22,7 @@
             </node>
         </group>
 
-        <node name="$(arg node_name)" pkg="zed_wrapper" type="zed_wrapper_node" output="screen" required="true"><!-- launch-prefix="valgrind" -->
+        <node name="zed_node" pkg="zed_wrapper" type="zed_wrapper_node" output="screen" required="true"><!-- launch-prefix="valgrind" -->
             <rosparam file="$(find zed_wrapper)/params/common.yaml" command="load" />
             <rosparam file="$(find zed_wrapper)/params/zed.yaml" command="load" />
 
@@ -33,7 +33,9 @@
             <param name="stream"            value="" />
 
             <!-- Publish ZED urdf -->
-            <param name="tracking/publish_tf"        value="false" />
+            <param name="tracking/publish_tf"        value="true" />
+            <param name="odometry_frame"             value="zed_odom"/>
+            <param name="world_frame"                value="zed_odom"/>
             <param name="tracking/publish_map_tf"    value="false" />
             <param name="general/resolution"         value="0"/>
             <param name="general/frame_rate"         value="15" />

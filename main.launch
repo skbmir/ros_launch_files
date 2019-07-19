@@ -9,18 +9,9 @@
         <arg name="angle_min"   value="-1.5708"/>
         <arg name="angle_max"   value="1.5708"/>
     </include>
-    <include file="$(env HOME)/workspace/ros_launch_files/D415.launch">
-        <arg name="camera"    value="D415_front"/>
-        <arg name="serial_no" value="839512060455"/>
-    </include>
-    <include file="$(env HOME)/workspace/ros_launch_files/D415.launch">
-        <arg name="camera"    value="D415_back"/>
-        <arg name="serial_no" value="840412061584"/>
-    </include>
-    <include file="$(env HOME)/workspace/ros_launch_files/T265.launch">
-        <arg name="camera"    value="T265"/>
-        <arg name="serial_no"  value="909212110213"/>
-    </include>
+    <include file="$(env HOME)/workspace/ros_launch_files/D415_front.launch"/>
+    <include file="$(env HOME)/workspace/ros_launch_files/D415_back.launch"/>
+    <include file="$(env HOME)/workspace/ros_launch_files/T265.launch"/>
     <include file="$(env HOME)/workspace/ros_launch_files/zed.launch">
     </include>
     <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_reconfigure"/>

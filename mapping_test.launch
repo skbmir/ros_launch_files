@@ -1,0 +1,53 @@
+<launch>
+    <param name="/use_sim_time" value="true"/>
+    <node pkg="rosbag" type="play" name="player" output="screen" args="--clock /home/stdbreaks/workspace/mapping.bag"/>
+    <node pkg="tf" type="static_transform_publisher" 
+          name="base_link_tf_broadcaster"
+          args="0 0 1.42 0 0 0 base_footprint base_link 10"/> <!-- completed -->
+    <node pkg="tf" type="static_transform_publisher" 
+          name="laser_link_tf_broadcaster"
+          args="3.24 0 -0.72 0 0 0 base_link laser_link 10"/> <!-- completed -->
+    <node pkg="tf" type="static_transform_publisher" 
+          name="imu_link_tf_broadcaster"
+          args="0 0 0 0 0 0 base_link base_imu 10"/> <!-- TODO -->
+    <node pkg="tf" type="static_transform_publisher"
+          name="gps_link_tf_broadcaster"
+          args="-0.95 0 1.42 0 0 0 base_link gps_link 10"/> <!-- completed check offset from right side -->
+    <node pkg="tf" type="static_transform_publisher"
+          name="D415_front_link_tf_broadcaster"
+          args="1.63 -0.73 0.38 0 0 3.1416 base_link D415_front_link 10"/> <!-- completed -->
+    <node pkg="tf" type="static_transform_publisher"
+          name="D415_front_depth_frame_link_tf_broadcaster"
+          args="0 0 0 0 0 0 D415_front_link D415_front_depth_frame 10"/>
+    <node pkg="tf" type="static_transform_publisher"
+          name="D415_front_depth_optical_frame_link_tf_broadcaster"
+          args="0 0 0 -0.5 0.5 -0.5 0.5 D415_front_depth_frame D415_front_depth_optical_frame 10"/>
+    <node pkg="tf" type="static_transform_publisher"
+          name="D415_back_link_tf_broadcaster"
+          args="-3.15 -0.37 0.38 3.1416 0 3.1416 base_link D415_back_link 10"/> <!-- completed -->
+    <node pkg="tf" type="static_transform_publisher"
+          name="D415_back_depth_frame_link_tf_broadcaster"
+          args="0 0 0 0 0 0 D415_back_link D415_back_depth_frame 10"/>
+    <node pkg="tf" type="static_transform_publisher"
+          name="D415_back_depth_optical_frame_link_tf_broadcaster"
+          args="0 0 0 -0.5 0.5 -0.5 0.5 D415_back_depth_frame D415_back_depth_optical_frame 10"/>
+    <node pkg="tf" type="static_transform_publisher"
+          name="zed_link_tf_broadcaster"
+          args="1.5 0 0.45 0 0 3.1416 base_link zed_camera_center 10"/> <!-- completed -->
+    <node pkg="tf" type="static_transform_publisher"
+          name="T265_link_tf_broadcaster"
+          args="1.5 0 0.4 0 0 0 base_link T265_link 10"/> <!-- completed -->
+    <node pkg="tf" type="static_transform_publisher"
+          name="T265_pose_link_tf_broadcaster"
+          args="0 0 0 0 0 0 T265_link T265_pose_frame 10"/>
+    <node pkg="gps_common" type="utm_odometry_node" name="gps_converter" output="screen">
+        <remap from="fix" to="ublox_node/fix"/>
+        <param name="rot_covariance" value="-1"/>
+        <param name="frame_id" value="gps_link"/>
+        <param name="child_frame_id" value="base_link"/>
+    </node>
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap" output="screen">
+        <remap from="cloud_in" to="/D415_back/depth/color/points"/>
+        <param name="frame_id" value="base_link"/>
+    </node>
+</launch>

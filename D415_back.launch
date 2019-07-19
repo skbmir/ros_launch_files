@@ -1,0 +1,33 @@
+<launch>
+    <arg name="camera" default="D415_back"/>
+    <arg name="serial_no" default=""/>
+    <group ns="D415">
+        <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+            <arg name="serial_no" value="840412061544"/>
+            <arg name="tf_prefix" value="D415"/>
+            <arg name="initial_reset" value="true"/>
+            <arg name="enable_sync"  value="true"/>
+            <arg name="align_depth"  value="true"/>
+            <arg name="clip_distance" value="-2"/>
+            <arg name="filters" value="pointcloud"/>
+            
+            <arg name="enable_depth" value="true"/>
+            <arg name="enable_infra1" value="false"/>
+            <arg name="enable_infra2" value="false"/>
+            <arg name="enable_color" value="true"/>
+            
+            <arg name="depth_width" value="848"/>
+            <arg name="depth_height" value="480"/>
+            <arg name="depth_fps"    value="15"/>
+            
+            <arg name="color_width" value="848"/>
+            <arg name="color_height" value="480"/>
+            <arg name="color_fps"    value="15"/>
+            
+            <arg name="enable_fisheye1" value="false"/>
+            <arg name="enable_fisheye2" value="false"/>
+            <arg name="enable_gyro" value="false"/>
+            <arg name="enable_accel" value="false"/>
+        </include>
+    </group>
+</launch>
