@@ -2,6 +2,9 @@
     <!-- Camera Model -->
     <arg name="node_name"             default="zed_node" />
 
+    <!-- Camera Model -->
+    <arg name="camera_model"          default="zed" /> <!-- 'zed' or 'zedm' -->
+
     <!-- Load SVO file -->
     <arg name="svo_file"              default="" /><!-- <arg name="svo_file" default="path/to/svo/file.svo"> -->
     <!-- Remote stream -->
@@ -11,40 +14,44 @@
     <arg name="publish_urdf"          default="true" />
 
     <arg name="camera_id"             default="-1" />
-    <arg name="gpu_id"                default="-1" />
+    <arg name="gpu_id"                default="1" />
 
-    <group ns="zed">
-        <!-- ROS URDF description of the ZED -->
-        <group if="$(arg publish_urdf)">
-            <param name="zed_description" textfile="$(find zed_wrapper)/urdf/zed.urdf" />
-            <node name="zed_state_publisher" pkg="robot_state_publisher" type="state_publisher">
-                <remap from="robot_description" to="zed_description" />
-            </node>
-        </group>
-
-        <node name="zed_node" pkg="zed_wrapper" type="zed_wrapper_node" output="screen" required="true"><!-- launch-prefix="valgrind" -->
-            <rosparam file="$(find zed_wrapper)/params/common.yaml" command="load" />
-            <rosparam file="$(find zed_wrapper)/params/zed.yaml" command="load" />
-
-            <!-- SVO file path -->
-            <param name="svo_file"          value="" />
-
-            <!-- Remote stream -->
-            <param name="stream"            value="" />
-
-            <!-- Publish ZED urdf -->
-            <param name="tracking/publish_tf"        value="true" />
-            <param name="odometry_frame"             value="zed_odom"/>
-            <param name="world_frame"                value="zed_odom"/>
-            <param name="tracking/publish_map_tf"    value="false" />
-            <param name="general/resolution"         value="0"/>
-            <param name="general/frame_rate"         value="15" />
-
-            <!-- Camera ID -->
-            <param name="general/zed_id"             value="-1" />
-
-            <!-- GPU ID -->
-            <param name="general/gpu_id"             value="1" />
+    <!-- ROS URDF description of the ZED -->
+    <group if="$(arg publish_urdf)">
+        <param name="zed_description" textfile="$(env HOME)/workspace/ros_launch_files/$(arg camera_model).urdf" />
+        <node name="zed_state_publisher" pkg="robot_state_publisher" type="state_publisher">
+            <remap from="robot_description" to="zed_description" />
         </node>
-     </group>
+    </group>
+
+    <node name="$(arg node_name)" pkg="zed_wrapper" type="zed_wrapper_node" output="screen" required="true"><!-- launch-prefix="valgrind" -->
+        <rosparam file="$(find zed_wrapper)/params/common.yaml" command="load" />
+        <rosparam file="$(find zed_wrapper)/params/$(arg camera_model).yaml" command="load" />
+        <param name="general/resolution" value="2"/>
+        <param name="general/frame_rate" value="30"/>
+        <param name="depth/quality"      value="4"/>
+        <param name="tracking/world_frame" value="zed_map"/>
+        <param name="tracking/map_frame"   value="zed_map"/>
+        <param name="tracking/odometry_frame" value="zed_odom"/>
+        <param name="tracking/publish_map_tf" value="true"/>
+        <param name="tracking/publish_tf"      value="true"/>
+        <param name="confidence"               value="80"/>
+        <param name="max_depth"                value="20.0"/>
+        <param name="point_cloud_freq"         value="30"/>
+        <param name="tracking/two_d_mode"      value="true"/>
+        <param name="fixed_z_value"            value="1.42"/>
+        <param name="depth/min_depth"          value="1.0"/>
+
+        <!-- SVO file path -->
+        <param name="svo_file"          value="$(arg svo_file)" />
+
+        <!-- Remote stream -->
+        <param name="stream"            value="$(arg stream)" />
+
+        <!-- Camera ID -->
+        <param name="general/zed_id"             value="$(arg camera_id)" />
+
+        <!-- GPU ID -->
+        <param name="general/gpu_id"             value="$(arg gpu_id)" />
+    </node>
 </launch>

@@ -1,0 +1,71 @@
+<launch>
+    <!-- Camera Model -->
+    <arg name="camera_model"          default="zed" /> <!-- 'zed' or 'zedm' -->
+
+    <!-- Load SVO file -->
+    <arg name="svo_file"              default="" /><!-- <arg name="svo_file" default="path/to/svo/file.svo"> -->
+
+    <!-- Remote stream -->
+    <arg name="stream"               default="" /> <!-- <arg name="stream" default="<ip_address>:<port>"> -->
+
+
+    <!-- Publish ZED urdf -->
+    <arg name="publish_urdf"          default="true" />
+
+    <arg name="nodelet_manager_name"  default="zed_nodelet_manager" />
+    <arg name="node_name"             default="zed_node" />
+
+    <!-- ROS URDF description of the ZED -->
+    <group if="$(arg publish_urdf)">
+        <param name="zed_description" textfile="$(env HOME)/workspace/ros_launch_files/$(arg camera_model).urdf" />
+        <node name="zed_state_publisher" pkg="robot_state_publisher" type="state_publisher">
+            <remap from="robot_description" to="zed_description" />
+        </node>
+    </group>
+    
+    <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager_name)" args="manager" output="screen"/>
+    <node pkg="nodelet" type="nodelet" name="$(arg node_name)" args="load zed_wrapper/ZEDWrapperNodelet $(arg nodelet_manager_name)" output="screen">
+        <rosparam file="$(find zed_wrapper)/params/common.yaml" command="load" />
+        <rosparam file="$(find zed_wrapper)/params/$(arg camera_model).yaml" command="load" />
+        <param name="general/resolution" value="1"/>
+        <param name="general/frame_rate" value="15"/>
+        <param name="tracking/world_frame" value="zed_map"/>
+        <param name="tracking/map_frame"   value="zed_map"/>
+        <param name="tracking/odometry_frame" value="zed_odom"/>
+        <param name="tracking/publish_map_tf" value="true"/>
+        <param name="tracking/publish_tf"      value="true"/>
+
+        <!-- SVO file path -->
+        <param name="svo_file"          value="$(arg svo_file)" />
+
+        <!-- Remote stream -->
+        <param name="stream"            value="$(arg stream)" />
+
+        <!-- Camera ID -->
+        <param name="general/zed_id"             value="-1" />
+
+        <!-- GPU ID -->
+        <param name="general/gpu_id"             value="-1" />
+    </node>
+    <node pkg="nodelet" type="nodelet" name="decimation_manager" args="manager" output="screen"/>
+    <node pkg="nodelet" type="nodelet" name="decimation_node" args="load rtabmap_ros/data_throttle decimation_manager" output="screen">
+        <remap from="rgb/image_in" to="/zed_node/rgb/image_rect_color"/>
+        <remap from="depth/image_out" to="/zed_node/depth/depth_registered"/>
+        <remap from="rgb/camera_info" to="zed_node/rgb/camera_info"/>
+        <remap from="rgb/image_out" to="zed/decimated_image"/>
+        <remap from="depth/image_out" to="zed/decimated_depth"/>
+        <remap from="rgb/camera_info_out" to="zed/decimated_camera_info"/>
+        <param name="queue_size"   value="8"/>
+        <param name="approx_sync"  value="true"/>
+        <param name="decimation"   value="8"/>
+    </node>
+    <node pkg="nodelet" type="nodelet" name="point_cloud_node" args="load rtabmap_ros/point_cloud_xyzrgb decimation_manager" output="screen">
+        <remap from="rgb/image" to="zed/decimated_image"/>
+        <remap from="depth/image" to="zed/decimated_depth"/>
+        <remap from="rgb/camera_info" to="zed/decimated_camera_info"/>
+        <remap from="cloud" to="zed/decimated_cloud"/>
+        <param name="queue_size" value="8"/>
+        <param name="min_depth"  value="1.0"/>
+        <param name="max_depth"  value="20.0"/>
+    </node>
+</launch>

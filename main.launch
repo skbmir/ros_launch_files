@@ -1,4 +1,34 @@
 <launch>
+    <node pkg="tf" type="static_transform_publisher" 
+          name="base_link_tf_broadcaster"
+          args="0 0 -1.42 0 0 0 base_link base_footprint 10"/> <!-- completed -->
+    <node pkg="tf" type="static_transform_publisher" 
+          name="laser_link_tf_broadcaster"
+          args="3.24 0 -0.72 0 0 0 base_link laser_link 10"/> <!-- completed -->
+    <node pkg="tf" type="static_transform_publisher" 
+          name="imu_link_tf_broadcaster"
+          args="0 0 0 0 0 0 base_link base_imu 10"/> <!-- TODO -->
+    <node pkg="tf" type="static_transform_publisher"
+          name="gps_link_tf_broadcaster"
+          args="-0.95 0 1.42 0 0 0 base_link gps_link 10"/> <!-- completed check offset from right side -->
+    <node pkg="tf" type="static_transform_publisher"
+          name="D415_back_link_tf_broadcaster"
+          args="-3.15 -0.37 0.52 3.1416 0.349 3.1416 base_link D415_back_link 10"/> <!-- completed -->
+<!--  0.26199  <node pkg="tf" type="static_transform_publisher"
+          name="D415_back_depth_frame_link_tf_broadcaster"
+          args="0 0 0 0 0 0 D415_back_link D415_back_depth_frame 10"/> -->
+<!--    <node pkg="tf" type="static_transform_publisher"
+          name="D415_back_depth_optical_frame_link_tf_broadcaster"
+          args="0 0 0 -0.5 0.5 -0.5 0.5 D415_back_depth_frame D415_back_depth_optical_frame 10"/> -->
+    <node pkg="tf" type="static_transform_publisher"
+          name="zed_link_tf_broadcaster"
+          args="1.5 0 0.45 0 0.08 0 base_link zed_link 10"/> <!-- completed -->
+    <node pkg="tf" type="static_transform_publisher"
+          name="T265_link_tf_broadcaster"
+          args="1.5 0 0.4 0 0 0 base_link T265_link 10"/> <!-- completed -->
+<!--    <node pkg="tf" type="static_transform_publisher"
+          name="T265_pose_link_tf_broadcaster"
+          args="0 0 0 0 0 0 T265_link T265_pose_frame 10"/> -->
     <include file="$(env HOME)/workspace/ros_launch_files/ublox.launch">
         <arg name="node_name"       value="ublox_node"/>
         <arg name="param_file_name" value="$(env HOME)/workspace/ros_launch_files/ublox_car.yaml"/>
@@ -9,10 +39,8 @@
         <arg name="angle_min"   value="-1.5708"/>
         <arg name="angle_max"   value="1.5708"/>
     </include>
-    <include file="$(env HOME)/workspace/ros_launch_files/D415_front.launch"/>
     <include file="$(env HOME)/workspace/ros_launch_files/D415_back.launch"/>
     <include file="$(env HOME)/workspace/ros_launch_files/T265.launch"/>
-    <include file="$(env HOME)/workspace/ros_launch_files/zed.launch">
-    </include>
+    <include file="$(env HOME)/workspace/ros_launch_files/zed.launch"/>
     <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_reconfigure"/>
 </launch>
